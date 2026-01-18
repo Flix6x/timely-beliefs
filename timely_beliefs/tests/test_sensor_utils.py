@@ -1,14 +1,15 @@
 """Tests for timely_beliefs.sensors.utils module."""
+
 from datetime import datetime, timedelta
 
 import pytest
 from pytz import utc
 
 from timely_beliefs.sensors.utils import (
+    FUNC_STORE,
+    eval_verified_knowledge_horizon_fnc,
     jsonify_time_dict,
     unjsonify_time_dict,
-    eval_verified_knowledge_horizon_fnc,
-    FUNC_STORE,
 )
 
 
@@ -21,7 +22,7 @@ def test_jsonify_time_dict():
         "int": 42,
     }
     result = jsonify_time_dict(d)
-    
+
     assert result["dt"] == "2020-01-01T12:00:00+00:00"
     assert result["td"] == "PT2H"
     assert result["str"] == "test"
@@ -37,7 +38,7 @@ def test_unjsonify_time_dict():
         "int": 42,
     }
     result = unjsonify_time_dict(d)
-    
+
     assert result["dt"] == datetime(2020, 1, 1, 12, 0, tzinfo=utc)
     assert result["td"] == timedelta(hours=2)
     assert result["str"] == "test"
@@ -53,7 +54,7 @@ def test_jsonify_unjsonify_roundtrip():
     }
     jsonified = jsonify_time_dict(original)
     result = unjsonify_time_dict(jsonified)
-    
+
     assert result["dt"] == original["dt"]
     assert result["td"] == original["td"]
     assert result["str"] == original["str"]
@@ -63,7 +64,7 @@ def test_func_store_exists():
     """Test that FUNC_STORE is populated with knowledge horizon functions."""
     assert isinstance(FUNC_STORE, dict)
     assert len(FUNC_STORE) > 0
-    
+
     # Check that each entry has expected structure
     for func_name, func_spec in FUNC_STORE.items():
         assert "fnc" in func_spec
