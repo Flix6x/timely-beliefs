@@ -1,7 +1,7 @@
 name: Trigger Auto-Fix Agent
 on:
   issues:
-    types: [opened]
+    types: [opened, labeled]
 
 jobs:
   trigger-agent:
