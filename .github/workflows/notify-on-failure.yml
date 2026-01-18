@@ -7,34 +7,51 @@ on:
 permissions:
   contents: read
   issues: write
+  pull-requests: write
 
 jobs:
-  create-trigger-issue:
+  notify-pr:
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Create agent trigger issue
+      - name: Comment on PR with auto-fix request
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const run = context.payload.workflow_run;
-            const title = `agent:auto-fix: Tests failed on ${run.head_branch} (${run.name})`;
-            const body = [
-              `Repository: ${context.repo.owner}/${context.repo.repo}`,
-              `Branch: ${run.head_branch}`,
-              `SHA: ${run.head_sha}`,
-              `Workflow: ${run.name}`,
-              `Workflow run: ${run.html_url}`,
-              "",
-              "This issue was created automatically to signal a CI failure. Label this issue `agent:auto-fix` (already added) to allow configured agents to attempt automated fixes.",
-              "",
-              "Agent policy: agents must create draft PRs only, include full logs, and never auto-merge."
-            ].join("\n\n");
-            await github.rest.issues.create({
+            
+            // Find the PR associated with this workflow run
+            const pulls = await github.rest.pulls.list({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title,
-              body,
-              labels: ["agent:auto-fix"]
+              state: 'open',
+              head: `${context.repo.owner}:${run.head_branch}`
+            });
+            
+            if (pulls.data.length === 0) {
+              console.log(`No open PR found for branch ${run.head_branch}`);
+              return;
+            }
+            
+            const pr = pulls.data[0];
+            const body = [
+              `@copilot The test suite failed on this PR. Please analyze and fix the failing tests.`,
+              "",
+              `**Failure Details:**`,
+              `- Branch: ${run.head_branch}`,
+              `- SHA: ${run.head_sha}`,
+              `- Workflow: ${run.name}`,
+              `- Workflow run: ${run.html_url}`,
+              "",
+              "Please review the test failures, fix them, and ensure all tests pass before this PR is ready for review.",
+              "",
+              "_This is an automated message. The agent will create conservative fixes as draft commits only, never auto-merge._"
+            ].join("\n");
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body
             });
