@@ -9,6 +9,11 @@ from timely_beliefs.examples import get_example_df
 from timely_beliefs.tests.utils import equal_lists
 
 
+def test_agent():
+    """Test whether the test-fixing agent picks up on this failing test."""
+    assert True == False
+
+
 def test_setting_reference():
     """Set a column with reference values."""
 
