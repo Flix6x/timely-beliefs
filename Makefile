@@ -9,7 +9,7 @@ PYV = $(shell python -c "import sys;t='{v[0]}.{v[1]}'.format(v=list(sys.version_
 install: install-deps install-tb
 
 install-for-test:
-	pip install setuptools_scm pytest
+	pip install setuptools_scm pytest pytest-cov
 
 install-deps:
 	pip install --upgrade pip-tools

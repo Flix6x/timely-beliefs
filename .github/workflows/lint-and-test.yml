@@ -27,6 +27,8 @@ jobs:
         with:
           python-version: ${{ matrix.py_version }}
       - uses: actions/checkout@v3
+      - name: Install coverage tools
+        run: pip install pytest-cov coveralls
       - name: Run main tests
         run: make test
       - name: Run forecast tests
@@ -34,6 +36,11 @@ jobs:
       - name: Run viz tests
         if: ${{ ! matrix.skip-viz }}
         run: make test-viz
+      - name: Upload coverage to Coveralls
+        if: matrix.py_version == '3.12'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: coveralls --service=github
     env:
       PGHOST: 127.0.0.1
       PGPORT: 5432

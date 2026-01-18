@@ -94,6 +94,22 @@ sections = ["FUTURE","STDLIB","THIRDPARTY","FIRSTPARTY","LOCALFOLDER"]
 default_section = "THIRDPARTY"
 
 [tool.pytest.ini_options]
+addopts = "--cov=timely_beliefs --cov-report=term-missing --cov-report=lcov"
+
+[tool.coverage.run]
+source = ["timely_beliefs"]
+omit = ["*/tests/*", "*/test_*.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "if typing.TYPE_CHECKING:",
+]
 
 [tool.setuptools_scm]
 local_scheme = "no-local-version"
