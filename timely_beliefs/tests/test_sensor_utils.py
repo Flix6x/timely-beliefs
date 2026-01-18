@@ -1,14 +1,15 @@
 """Tests for timely_beliefs.sensors.utils module."""
+
 from datetime import datetime, timedelta
 
 import pytest
 from pytz import utc
 
 from timely_beliefs.sensors.utils import (
+    FUNC_STORE,
+    eval_verified_knowledge_horizon_fnc,
     jsonify_time_dict,
     unjsonify_time_dict,
-    eval_verified_knowledge_horizon_fnc,
-    FUNC_STORE,
 )
 
 

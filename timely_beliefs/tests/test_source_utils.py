@@ -1,4 +1,5 @@
 """Tests for timely_beliefs.sources.utils module."""
+
 import warnings
 
 import pandas as pd
@@ -55,12 +56,14 @@ def test_ensure_source_exists_with_none_allowed():
 def test_ensure_sources_exists_with_series():
     """Test applying ensure_source_exists on a Series."""
     # Create a Series with mixed types
-    sources = pd.Series([
-        BeliefSource("Source1"),
-        "Source2",
-        BeliefSource("Source3"),
-        "Source2",  # Duplicate to test mapping
-    ])
+    sources = pd.Series(
+        [
+            BeliefSource("Source1"),
+            "Source2",
+            BeliefSource("Source3"),
+            "Source2",  # Duplicate to test mapping
+        ]
+    )
 
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
@@ -86,11 +89,13 @@ def test_ensure_sources_exists_with_series():
 
 def test_ensure_sources_exists_all_belief_sources():
     """Test that a Series of BeliefSources passes through without warnings."""
-    sources = pd.Series([
-        BeliefSource("Source1"),
-        BeliefSource("Source2"),
-        BeliefSource("Source1"),
-    ])
+    sources = pd.Series(
+        [
+            BeliefSource("Source1"),
+            BeliefSource("Source2"),
+            BeliefSource("Source1"),
+        ]
+    )
 
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
@@ -139,10 +144,7 @@ def test_ensure_sources_exists_empty_series():
 
 def test_ensure_sources_exists_preserves_index():
     """Test that the Series index is preserved."""
-    sources = pd.Series(
-        [BeliefSource("Source1"), "Source2"],
-        index=["a", "b"]
-    )
+    sources = pd.Series([BeliefSource("Source1"), "Source2"], index=["a", "b"])
 
     with warnings.catch_warnings(record=True):
         warnings.simplefilter("always")
