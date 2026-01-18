@@ -40,6 +40,7 @@ jobs:
         if: matrix.py_version == '3.12'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: coveralls --service=github
     env:
       PGHOST: 127.0.0.1
