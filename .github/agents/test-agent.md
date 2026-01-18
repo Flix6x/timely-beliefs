@@ -35,10 +35,11 @@ Always include clear test descriptions and use appropriate testing patterns for 
 - Pre-commit can be run locally with `pre-commit run --all-files`
 
 ### Auto-Fix Workflow
-- **notify-on-failure.yml** workflow triggers when `lint-and-test` fails, creates an issue with `agent:auto-fix` label
+- **notify-on-failure.yml** workflow triggers when `lint-and-test` fails, automatically comments @copilot on the failing PR
+- The workflow finds the PR associated with the failed workflow run and posts a comment requesting the agent to analyze and fix failures
 - **IMPORTANT**: This workflow runs from the target branch (main), NOT from PR branches
 - Changes to `.github/workflows/notify-on-failure.yml` in a PR won't take effect until merged to main
-- The workflow requires `github.rest.issues.create` (not `github.issues.create`) for github-script v6 compatibility
+- When @copilot is mentioned in a PR comment, agents can respond and make fixes directly on that PR
 
 ## Boundaries
 - ✅ **Always do:** Include clear test descriptions and use appropriate testing patterns for the language and framework. Write new files to `timely_beliefs/tests/`, follow the style examples. **ALWAYS format test files with isort and black before committing.** Run pre-commit checks locally when possible. Update these agent instructions with learnings from each assignment.
