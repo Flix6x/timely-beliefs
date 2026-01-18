@@ -23,7 +23,7 @@ def test_jsonify_time_dict():
     }
     result = jsonify_time_dict(d)
 
-    assert result["dt"] == "2020-01-01T12:00:00+00:00"
+    assert result["dt"] == "2020-01-01T12:00:00Z"
     assert result["td"] == "PT2H"
     assert result["str"] == "test"
     assert result["int"] == 42
@@ -88,14 +88,15 @@ def test_eval_verified_knowledge_horizon_fnc_ex_ante():
 def test_eval_verified_knowledge_horizon_fnc_ex_post():
     """Test evaluating ex_post knowledge horizon function."""
     event_resolution = timedelta(hours=1)
+    ex_post_horizon = timedelta(hours=0)  # Add required parameter
     result = eval_verified_knowledge_horizon_fnc(
         "ex_post",
-        par={},
+        par={"ex_post_horizon": ex_post_horizon},
         event_start=datetime(2020, 1, 1, 12, 0, tzinfo=utc),
         event_resolution=event_resolution,
     )
     assert isinstance(result, timedelta)
-    assert result == -event_resolution
+    assert result == -event_resolution - ex_post_horizon
 
 
 def test_eval_verified_knowledge_horizon_fnc_x_days_ago_at_y_oclock():
