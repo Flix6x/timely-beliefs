@@ -31,7 +31,7 @@ jobs:
               "",
               "Agent policy: agents must create draft PRs only, include full logs, and never auto-merge."
             ].join("\n\n");
-            await github.issues.create({
+            await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title,
