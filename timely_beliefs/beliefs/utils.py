@@ -284,7 +284,7 @@ def beliefs_long_to_wide(df: "classes.BeliefsDataFrame") -> "classes.BeliefsData
     )
 
     # Optionally label columns explicitly (use the cp as suffix)
-    df_wide.columns = [f"event_value_{cp:g}" for cp in df_wide.columns]
+    df_wide.columns = [f"event_value_{cp: g}" for cp in df_wide.columns]
 
     return df_wide
 
